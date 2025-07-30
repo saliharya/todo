@@ -65,7 +65,10 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding, MainViewModel>() 
                 is ResourceState.Success -> {
                     binding.progressBar.visibility = View.GONE
                     val todos = state.data.orEmpty()
-                    todoAdapter.updateData(todos)
+
+                    binding.rvTodoList.post {
+                        todoAdapter.updateData(todos)
+                    }
 
                     binding.rvTodoList.visibility =
                         if (todos.isNotEmpty()) View.VISIBLE else View.GONE

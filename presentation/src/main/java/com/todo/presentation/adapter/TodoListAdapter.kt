@@ -30,18 +30,13 @@ class TodoListAdapter(
     }
 
     fun updateData(newList: List<TodoEntity>) {
+        if (listTodo == newList) return
+
         val diffCallback = TodoDiffCallback(listTodo, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
 
-        listTodo = newList
-
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            Handler(Looper.getMainLooper()).post {
-                diffResult.dispatchUpdatesTo(this)
-            }
-        } else {
-            diffResult.dispatchUpdatesTo(this)
-        }
+        listTodo = newList.toList()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class TodoViewHolder(
