@@ -9,7 +9,8 @@ import com.todo.presentation.databinding.ItemTodoBinding
 
 class TodoListAdapter(
     private var listTodo: List<TodoEntity>,
-    private val onItemClicked: (TodoEntity) -> Unit
+    private val onItemClicked: (TodoEntity) -> Unit,
+    private val onTodoCheckedChanged: (TodoEntity, Boolean) -> Unit
 ) : RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
@@ -40,9 +41,19 @@ class TodoListAdapter(
 
         fun bind(todo: TodoEntity?) = with(binding) {
             todo?.let {
-                root.setOnClickListener { onItemClicked(todo) }
                 tvTitle.text = todo.title
+                cbCompleted.isChecked = todo.completed
+
+                root.setOnClickListener {
+                    onItemClicked(todo)
+                }
+
+                cbCompleted.setOnCheckedChangeListener(null)
+                cbCompleted.setOnCheckedChangeListener { _, isChecked ->
+                    onTodoCheckedChanged(todo, isChecked)
+                }
             }
         }
     }
 }
+

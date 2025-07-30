@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.todo.common.base.BaseFragment
 import com.todo.common.util.ResourceState
 import com.todo.presentation.R
@@ -18,7 +19,7 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding, MainViewModel>() 
 
     override val viewModel: MainViewModel by sharedViewModel()
 
-    private lateinit var adapter: TodoListAdapter
+    private lateinit var todoAdapter: TodoListAdapter
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -26,19 +27,28 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding, MainViewModel>() 
     ): FragmentTodoListBinding = FragmentTodoListBinding.inflate(inflater, container, false)
 
     override fun setupViews() {
-        adapter = TodoListAdapter(emptyList()) { selectedTodo ->
-            val isTablet = binding.root.findViewById<View?>(R.id.detail_fragment_container) != null
-
-            if (isTablet) {
-                viewModel.selectTodo(selectedTodo)
-            } else {
-                val intent = Intent(requireContext(), DetailActivity::class.java)
-                intent.putExtra("todo", selectedTodo.id)
-                startActivity(intent)
+        todoAdapter = TodoListAdapter(
+            listTodo = emptyList(),
+            onItemClicked = { selectedTodo ->
+                val isTablet =
+                    binding.root.findViewById<View?>(R.id.detail_fragment_container) != null
+                if (isTablet) {
+                    viewModel.selectTodo(selectedTodo)
+                } else {
+                    val intent = Intent(requireContext(), DetailActivity::class.java)
+                    intent.putExtra("todo", selectedTodo.id)
+                    startActivity(intent)
+                }
+            },
+            onTodoCheckedChanged = { todo, isChecked ->
+                viewModel.toggleTodoCompleted(todo, isChecked)
             }
-        }
+        )
 
-        binding.rvTodoList.adapter = adapter
+        with(binding.rvTodoList) {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = todoAdapter
+        }
     }
 
     override fun observeData() {
@@ -50,7 +60,7 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding, MainViewModel>() 
 
                 is ResourceState.Success -> {
                     val todos = state.data.orEmpty()
-                    adapter.updateData(todos)
+                    todoAdapter.updateData(todos)
                 }
 
                 is ResourceState.Error -> {
@@ -59,5 +69,4 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding, MainViewModel>() 
             }
         }
     }
-
 }

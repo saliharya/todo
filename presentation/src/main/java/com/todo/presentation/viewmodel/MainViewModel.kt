@@ -60,6 +60,17 @@ class MainViewModel(
         }
     }
 
+    fun toggleTodoCompleted(todo: TodoEntity, isChecked: Boolean) {
+        val updatedTodo = todo.copy(completed = isChecked)
+        val currentList =
+            (_todoListState.value as? ResourceState.Success)?.data.orEmpty().toMutableList()
+        val index = currentList.indexOfFirst { it.id == todo.id }
+        if (index != -1) {
+            currentList[index] = updatedTodo
+            _todoListState.value = ResourceState.Success(currentList)
+        }
+    }
+
     fun selectTodo(todo: TodoEntity) {
         _selectedTodo.value = todo
     }
