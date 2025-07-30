@@ -42,6 +42,7 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding, MainViewModel>() 
     }
 
     override fun observeData() {
+        viewModel.fetchTodoList()
         viewModel.todoListState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ResourceState.Loading -> {

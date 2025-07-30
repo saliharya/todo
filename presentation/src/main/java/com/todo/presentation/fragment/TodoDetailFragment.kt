@@ -16,12 +16,22 @@ class TodoDetailFragment : BaseFragment<FragmentTodoDetailBinding, MainViewModel
         container: ViewGroup?
     ): FragmentTodoDetailBinding = FragmentTodoDetailBinding.inflate(inflater, container, false)
 
-    override fun setupViews() {}
+    override fun setupViews() {
+    }
 
     override fun observeData() {
+        val todoId = arguments?.getInt("todo")
+            ?: requireActivity().intent.getIntExtra("todo", -1)
+
+        if (todoId != -1) {
+            viewModel.fetchTodoDetail(todoId)
+        }
+
         viewModel.selectedTodo.observe(viewLifecycleOwner) { todo ->
-            binding.tvTitle.text = todo?.title
-            binding.cbComplete.isChecked = todo?.completed == true
+            with(binding) {
+                tvTitle.text = todo?.title.orEmpty()
+                cbComplete.isChecked = todo?.completed == true
+            }
         }
     }
 }
