@@ -1,5 +1,7 @@
 package com.todo.presentation.adapter
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -32,7 +34,14 @@ class TodoListAdapter(
         val diffResult = DiffUtil.calculateDiff(diffCallback)
 
         listTodo = newList
-        diffResult.dispatchUpdatesTo(this)
+
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            Handler(Looper.getMainLooper()).post {
+                diffResult.dispatchUpdatesTo(this)
+            }
+        } else {
+            diffResult.dispatchUpdatesTo(this)
+        }
     }
 
     inner class TodoViewHolder(
