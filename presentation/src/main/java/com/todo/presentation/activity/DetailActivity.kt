@@ -1,21 +1,24 @@
 package com.todo.presentation.activity
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.todo.common.base.BaseActivity
 import com.todo.presentation.R
+import com.todo.presentation.databinding.ActivityDetailBinding
+import com.todo.presentation.fragment.TodoDetailFragment
+import com.todo.presentation.viewmodel.MainViewModel
 
-class DetailActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_detail)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+class DetailActivity : BaseActivity<ActivityDetailBinding, MainViewModel>() {
+
+    override val binding: ActivityDetailBinding by lazy {
+        ActivityDetailBinding.inflate(layoutInflater)
     }
+
+    override val viewModel: MainViewModel by viewModel()
+
+    override fun setupViews() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentDetailContainer, TodoDetailFragment())
+            .commit()
+    }
+
+    override fun observeData() {}
 }

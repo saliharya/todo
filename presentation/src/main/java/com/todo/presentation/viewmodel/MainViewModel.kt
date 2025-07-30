@@ -8,6 +8,7 @@ import com.todo.common.util.ResourceState
 import com.todo.core.domain.model.TodoEntity
 import com.todo.core.domain.usecase.FetchTodoDetailUseCase
 import com.todo.core.domain.usecase.FetchTodoListUseCase
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -22,19 +23,48 @@ class MainViewModel(
     private val _todoDetailState = MutableLiveData<ResourceState<TodoEntity>>()
     val todoDetailState: LiveData<ResourceState<TodoEntity>> get() = _todoDetailState
 
+    private val _selectedTodo = MutableLiveData<TodoEntity?>()
+    val selectedTodo: LiveData<TodoEntity?> get() = _selectedTodo
+
     fun fetchTodoList() {
+        _todoListState.value = ResourceState.Loading()
         viewModelScope.launch {
-            fetchTodoListUseCase().collectLatest {
-                _todoListState.postValue(it)
-            }
+            fetchTodoListUseCase()
+                .catch { throwable ->
+                    _todoListState.postValue(
+                        ResourceState.Error(
+                            throwable.message ?: "Unknown error"
+                        )
+                    )
+                }
+                .collectLatest { result ->
+                    _todoListState.postValue(result)
+                }
         }
     }
 
     fun fetchTodoDetail(id: Int) {
+        _todoDetailState.value = ResourceState.Loading()
         viewModelScope.launch {
-            fetchTodoDetailUseCase(id).collectLatest {
-                _todoDetailState.postValue(it)
-            }
+            fetchTodoDetailUseCase(id)
+                .catch { throwable ->
+                    _todoDetailState.postValue(
+                        ResourceState.Error(
+                            throwable.message ?: "Unknown error"
+                        )
+                    )
+                }
+                .collectLatest { result ->
+                    _todoDetailState.postValue(result)
+                }
         }
+    }
+
+    fun selectTodo(todo: TodoEntity) {
+        _selectedTodo.value = todo
+    }
+
+    fun clearSelectedTodo() {
+        _selectedTodo.value = null
     }
 }

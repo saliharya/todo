@@ -4,9 +4,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import com.todo.common.base.BaseFragment
-import com.todo.common.util.showToast
 import com.todo.presentation.R
 import com.todo.presentation.activity.DetailActivity
 import com.todo.presentation.adapter.TodoListAdapter
@@ -17,40 +15,33 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class TodoListFragment : BaseFragment<FragmentTodoListBinding, MainViewModel>() {
 
     override val viewModel: MainViewModel by sharedViewModel()
+
     private lateinit var adapter: TodoListAdapter
 
-    override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?) =
-        FragmentTodoListBinding.inflate(inflater, container, false)
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentTodoListBinding = FragmentTodoListBinding.inflate(inflater, container, false)
 
     override fun setupViews() {
-        adapter = TodoListAdapter(
-            listTodo = emptyList()
-        ) { todo ->
-            if (requireActivity().findViewById<View?>(R.id.fragmentDetailContainer) != null) {
-                val fragment = TodoDetailFragment.newInstance(todo.id)
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentDetailContainer, fragment)
-                    .commit()
+        adapter = TodoListAdapter(emptyList()) { selectedTodo ->
+            val isTablet = binding.root.findViewById<View?>(R.id.fragmentDetailContainer) != null
+
+            if (isTablet) {
+                viewModel.selectTodo(selectedTodo)
             } else {
-                // Phone mode: buka DetailActivity
                 val intent = Intent(requireContext(), DetailActivity::class.java)
-                intent.putExtra("TODO_ID", todo.id)
+                intent.putExtra("todo", selectedTodo)
                 startActivity(intent)
             }
         }
 
         binding.rvTodoList.adapter = adapter
-        viewModel.fetchTodoList()
     }
 
     override fun observeData() {
-        viewModel.todoListLiveData.observe(viewLifecycleOwner) { todos ->
-            adapter.submitList(todos)
-            binding.tvEmpty.isVisible = todos.isEmpty()
-        }
-
-        viewModel.errorMessage.observe(viewLifecycleOwner) { msg ->
-            requireContext().showToast(msg)
+        viewModel.todoList.observe(viewLifecycleOwner) {
+            adapter.updateData(it)
         }
     }
 }
