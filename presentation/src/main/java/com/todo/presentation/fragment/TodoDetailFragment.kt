@@ -21,7 +21,7 @@ class TodoDetailFragment : BaseFragment<FragmentTodoDetailBinding, MainViewModel
 
     override fun observeData() {
         val todoId = arguments?.getInt("todo")
-            ?: requireActivity().intent.getIntExtra("todo", -1)
+            ?: requireActivity().intent.getIntExtra("todo", 1)
 
         if (todoId != -1) {
             viewModel.fetchTodoDetail(todoId)
