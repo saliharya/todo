@@ -1,9 +1,11 @@
 package com.todo.presentation.fragment
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.todo.common.base.BaseFragment
 import com.todo.common.util.ResourceState
+import com.todo.common.util.showToast
 import com.todo.presentation.databinding.FragmentTodoDetailBinding
 import com.todo.presentation.viewmodel.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -30,7 +32,12 @@ class TodoDetailFragment : BaseFragment<FragmentTodoDetailBinding, MainViewModel
 
         viewModel.todoDetailState.observe(viewLifecycleOwner) { state ->
             when (state) {
+                is ResourceState.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+
                 is ResourceState.Success -> {
+                    binding.progressBar.visibility = View.GONE
                     val todo = state.data
                     with(binding) {
                         tvTitle.text = todo?.title.orEmpty()
@@ -39,9 +46,8 @@ class TodoDetailFragment : BaseFragment<FragmentTodoDetailBinding, MainViewModel
                 }
 
                 is ResourceState.Error -> {
-                }
-
-                is ResourceState.Loading -> {
+                    binding.progressBar.visibility = View.GONE
+                    requireActivity().showToast(state.message)
                 }
             }
         }

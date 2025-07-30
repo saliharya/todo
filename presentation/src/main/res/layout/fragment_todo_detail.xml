@@ -3,13 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@android:color/white"
+    android:padding="24dp">
 
     <CheckBox
         android:id="@+id/cbComplete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:enabled="true"
+        android:layout_marginBottom="8dp"
+        android:buttonTint="@color/teal_700"
+        android:text="@string/completed"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -17,11 +21,23 @@
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:text="@string/todo_title"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/cbComplete"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cbComplete"
-        app:layout_constraintTop_toTopOf="@id/cbComplete" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cbComplete" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

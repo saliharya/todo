@@ -4,10 +4,10 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.todo.common.base.BaseFragment
 import com.todo.common.util.ResourceState
+import com.todo.common.util.showToast
 import com.todo.presentation.R
 import com.todo.presentation.activity.DetailActivity
 import com.todo.presentation.adapter.TodoListAdapter
@@ -57,15 +57,27 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding, MainViewModel>() 
         viewModel.todoListState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ResourceState.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.rvTodoList.visibility = View.GONE
+                    binding.tvEmptyState.visibility = View.GONE
                 }
 
                 is ResourceState.Success -> {
+                    binding.progressBar.visibility = View.GONE
                     val todos = state.data.orEmpty()
                     todoAdapter.updateData(todos)
+
+                    binding.rvTodoList.visibility =
+                        if (todos.isNotEmpty()) View.VISIBLE else View.GONE
+                    binding.tvEmptyState.visibility =
+                        if (todos.isEmpty()) View.VISIBLE else View.GONE
                 }
 
                 is ResourceState.Error -> {
-                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                    binding.progressBar.visibility = View.GONE
+                    binding.rvTodoList.visibility = View.GONE
+                    binding.tvEmptyState.visibility = View.VISIBLE
+                    requireActivity().showToast(state.message)
                 }
             }
         }
