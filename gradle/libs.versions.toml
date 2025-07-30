@@ -8,7 +8,15 @@ espressoCore = "3.6.1"
 appcompat = "1.7.1"
 material = "1.12.0"
 activity = "1.10.1"
-constraintlayout = "2.1.4"
+constraintlayout = "2.2.1"
+retrofit = "3.0.0"
+room = "2.7.2"
+koin = "3.2.2"
+coroutines = "1.10.2"
+ksp = "1.5.30-1.0.0"
+playcore = "1.10.3"
+multidex = "2.0.1"
+motiontoast = "1.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -20,7 +28,32 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
+playcore = { group = "com.google.android.play", name = "core", version.ref = "playcore" }
+
+# Retrofit + Gson
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+
+# Room
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+# Koin
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-androidx-viewmodel = { group = "io.insert-koin", name = "koin-androidx-viewmodel", version.ref = "koin" }
+
+# Kotlin Coroutines
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+
+androidx-multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
+
+motiontoast = { group = "com.github.Spikeysanju", name = "MotionToast", version.ref = "motiontoast" }
+
+
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

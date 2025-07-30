@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.ksp)
+
 }
 
 android {
@@ -45,4 +47,24 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.koin.android)
+    implementation(libs.retrofit)
+
+    implementation(libs.koin.android)
+
+    implementation(libs.kotlinx.coroutines.android)
+
+    ksp(libs.room.compiler)
+
+    implementation(libs.playcore)
+    implementation(libs.androidx.multidex)
+
+    implementation(project(":core"))
+    implementation(project(":common"))
+    implementation(project(":presentation"))
 }
