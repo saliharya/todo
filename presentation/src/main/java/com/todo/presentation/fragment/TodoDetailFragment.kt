@@ -3,6 +3,7 @@ package com.todo.presentation.fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.todo.common.base.BaseFragment
+import com.todo.common.util.ResourceState
 import com.todo.presentation.databinding.FragmentTodoDetailBinding
 import com.todo.presentation.viewmodel.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -21,17 +22,29 @@ class TodoDetailFragment : BaseFragment<FragmentTodoDetailBinding, MainViewModel
 
     override fun observeData() {
         val todoId = arguments?.getInt("todo")
-            ?: requireActivity().intent.getIntExtra("todo", 1)
+            ?: requireActivity().intent.getIntExtra("todo", -1)
 
         if (todoId != -1) {
             viewModel.fetchTodoDetail(todoId)
         }
 
-        viewModel.selectedTodo.observe(viewLifecycleOwner) { todo ->
-            with(binding) {
-                tvTitle.text = todo?.title.orEmpty()
-                cbComplete.isChecked = todo?.completed == true
+        viewModel.todoDetailState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is ResourceState.Success -> {
+                    val todo = state.data
+                    with(binding) {
+                        tvTitle.text = todo?.title.orEmpty()
+                        cbComplete.isChecked = todo?.completed == true
+                    }
+                }
+
+                is ResourceState.Error -> {
+                }
+
+                is ResourceState.Loading -> {
+                }
             }
         }
     }
+
 }

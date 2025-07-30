@@ -35,6 +35,7 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding, MainViewModel>() 
                 if (isTablet) {
                     viewModel.selectTodo(selectedTodo)
                 } else {
+                    viewModel.selectTodo(selectedTodo)
                     val intent = Intent(requireContext(), DetailActivity::class.java)
                     intent.putExtra("todo", selectedTodo.id)
                     startActivity(intent)
