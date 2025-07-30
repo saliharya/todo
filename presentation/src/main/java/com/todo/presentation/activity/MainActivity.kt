@@ -18,12 +18,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun setupViews() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentListContainer, TodoListFragment())
+            .replace(R.id.list_fragment_container, TodoListFragment())
             .commit()
 
-        if (binding.fragmentDetailContainer != null) {
+        if (binding.detailFragmentContainer != null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentDetailContainer!!, TodoDetailFragment())
+                .replace(R.id.detail_fragment_container, TodoDetailFragment())
                 .commit()
         }
     }

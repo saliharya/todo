@@ -4,7 +4,9 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.todo.common.base.BaseFragment
+import com.todo.common.util.ResourceState
 import com.todo.presentation.R
 import com.todo.presentation.activity.DetailActivity
 import com.todo.presentation.adapter.TodoListAdapter
@@ -25,13 +27,13 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding, MainViewModel>() 
 
     override fun setupViews() {
         adapter = TodoListAdapter(emptyList()) { selectedTodo ->
-            val isTablet = binding.root.findViewById<View?>(R.id.fragmentDetailContainer) != null
+            val isTablet = binding.root.findViewById<View?>(R.id.detail_fragment_container) != null
 
             if (isTablet) {
                 viewModel.selectTodo(selectedTodo)
             } else {
                 val intent = Intent(requireContext(), DetailActivity::class.java)
-                intent.putExtra("todo", selectedTodo)
+                intent.putExtra("todo", selectedTodo.id)
                 startActivity(intent)
             }
         }
@@ -40,8 +42,21 @@ class TodoListFragment : BaseFragment<FragmentTodoListBinding, MainViewModel>() 
     }
 
     override fun observeData() {
-        viewModel.todoList.observe(viewLifecycleOwner) {
-            adapter.updateData(it)
+        viewModel.todoListState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is ResourceState.Loading -> {
+                }
+
+                is ResourceState.Success -> {
+                    val todos = state.data.orEmpty()
+                    adapter.updateData(todos)
+                }
+
+                is ResourceState.Error -> {
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
+
 }

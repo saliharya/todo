@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
+    id("com.android.library")
     alias(libs.plugins.kotlin.android)
 }
 
@@ -8,12 +8,6 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.todo.presentation"
-        minSdk = 27
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -50,7 +44,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.koin.android)
-    implementation(libs.koin.androidx.viewmodel)
 
     implementation(project(":common"))
     implementation(project(":core"))
